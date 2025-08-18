@@ -9,5 +9,4 @@ public class DreamjobApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DreamjobApplication.class, args);
 	}
-
 }

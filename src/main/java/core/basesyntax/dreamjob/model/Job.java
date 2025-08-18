@@ -2,42 +2,49 @@ package core.basesyntax.dreamjob.model;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import jakarta.persistence.ManyToOne;
+import lombok.Setter;
 
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
-@RequiredArgsConstructor
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@Table(name = "job")
 public class Job {
     @Id
     private Long id;
+
     private String jobPageUrl;
+
     private String positionName;
+
     private String organizationJobPageUrl;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id", nullable = false)
+    @EqualsAndHashCode.Exclude
     private Organization organization;
+
     @ElementCollection
     @EqualsAndHashCode.Exclude
-    private List<String> laborFunctions;
+    private Set<String> laborFunctions;
+
     @ElementCollection
     @EqualsAndHashCode.Exclude
-    private List<String> locations;
+    private Set<String> locations;
+
     private Long postedDate;
+
     private String description;
-    @ElementCollection
-    @EqualsAndHashCode.Exclude
-    private List<String> tags;
+
+    private String seniority;
 }

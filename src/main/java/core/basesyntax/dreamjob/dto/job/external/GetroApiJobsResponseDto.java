@@ -1,15 +1,14 @@
 package core.basesyntax.dreamjob.dto.job.external;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class JobsResponseDto {
+public class GetroApiJobsResponseDto {
     private Results results;
 
     @Data
@@ -17,6 +16,6 @@ public class JobsResponseDto {
     @AllArgsConstructor
     public static class Results {
         private int count;
-        private List<JobDto> jobs;
+        private List<JobExternalDto> jobs;
     }
 }

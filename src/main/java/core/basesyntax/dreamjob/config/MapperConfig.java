@@ -1,4 +1,4 @@
-package core.basesyntax.userservice.config;
+package core.basesyntax.dreamjob.config;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.NullValueCheckStrategy;

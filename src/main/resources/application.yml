@@ -1,1 +1,18 @@
-spring.application.name=dreamjob
+spring:
+  application:
+    name: dreamjob
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://localhost:${POSTGRES_PORT_LOCAL:5432}/${POSTGRES_DB:dreamjob_db}
+    username: ${POSTGRES_USER:dreamjob_user}
+    password: ${POSTGRES_PASSWORD:dreamjob_password}
+    driver-class-name: org.postgresql.Driver
+  jackson:
+    property-naming-strategy: SNAKE_CASE

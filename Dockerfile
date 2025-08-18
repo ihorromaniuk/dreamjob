@@ -3,7 +3,6 @@ FROM maven:3.9.9 AS build
 WORKDIR /app
 # Copy the pom.xml and the project files to the container
 COPY pom.xml .
-COPY checkstyle.xml .
 COPY src ./src
 COPY *.env .
 # Build the application using Maven
@@ -13,6 +12,6 @@ FROM openjdk:21
 # Set the working directory in the container
 WORKDIR /app
 # Copy the built JAR file from the previous stage to the container
-COPY --from=build /app/target/book-shop.jar .
+COPY --from=build /app/target/dreamjob-0.0.1-SNAPSHOT.jar .
 # Set the command to run the application
-CMD ["java", "-jar", "book-shop.jar"]
+CMD ["java", "-jar", "dreamjob-0.0.1-SNAPSHOT.jar"]

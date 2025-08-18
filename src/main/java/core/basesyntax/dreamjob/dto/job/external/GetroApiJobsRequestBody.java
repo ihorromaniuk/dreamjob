@@ -1,10 +1,10 @@
 package core.basesyntax.dreamjob.dto.job.external;
 
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import lombok.experimental.Accessors;
 
 @Data
@@ -20,6 +20,6 @@ public class GetroApiJobsRequestBody {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Filters {
-        private List<String> job_functions;
+        private Set<String> jobFunctions;
     }
 }

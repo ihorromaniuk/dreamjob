@@ -1,21 +1,20 @@
 package core.basesyntax.dreamjob.dto.job.external;
 
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class JobDto {
+public class JobExternalDto {
     private Long id;
     private Long createdAt;
     private String title;
     private String url;
     private Organization organization;
-    private List<String> locations;
+    private Set<String> locations;
     private boolean hasDescription;
     private String slug;
     private String seniority;
@@ -28,6 +27,6 @@ public class JobDto {
         private String logoUrl;
         private String name;
         private String slug;
-        private List<String> industryTags;
+        private Set<String> industryTags;
     }
 }

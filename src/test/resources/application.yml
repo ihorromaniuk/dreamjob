@@ -1,0 +1,17 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console # The path to access the H2 console in your browser
+      settings:
+        trace: false
+        web-allow-others: false # Set to true if you need remote access (use with caution)
+  datasource:
+    url: jdbc:h2:mem:testdb # In-memory database named 'testdb'
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password # Or leave blank if no password is desired
+  jpa:
+    hibernate:
+      ddl-auto: update # Or 'none', 'create', 'create-drop' based on your needs
+    database-platform: org.hibernate.dialect.H2Dialect
