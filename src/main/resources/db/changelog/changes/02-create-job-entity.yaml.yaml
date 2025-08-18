@@ -1,0 +1,105 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1755400119824-1
+      author: Igor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_job
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: job_page_url
+                  type: VARCHAR(255)
+              - column:
+                  name: position_name
+                  type: VARCHAR(255)
+              - column:
+                  name: organization_job_page_url
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: organization_id
+                  type: BIGINT
+              - column:
+                  name: posted_date
+                  type: BIGINT
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: seniority
+                  type: VARCHAR(255)
+            tableName: job
+  - changeSet:
+      id: 1755400119824-2
+      author: Igor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: job_id
+                  type: BIGINT
+              - column:
+                  name: labor_functions
+                  type: VARCHAR(255)
+            tableName: job_labor_functions
+  - changeSet:
+      id: 1755400119824-3
+      author: Igor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: job_id
+                  type: BIGINT
+              - column:
+                  name: locations
+                  type: VARCHAR(255)
+            tableName: job_locations
+  - changeSet:
+      id: 1755400119824-4
+      author: Igor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: organization_id
+            baseTableName: job
+            constraintName: FK_JOB_ON_ORGANIZATION
+            referencedColumnNames: id
+            referencedTableName: organization
+  - changeSet:
+      id: 1755400119824-5
+      author: Igor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: job_id
+            baseTableName: job_labor_functions
+            constraintName: fk_job_laborfunctions_on_job
+            referencedColumnNames: id
+            referencedTableName: job
+  - changeSet:
+      id: 1755400119824-6
+      author: Igor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: job_id
+            baseTableName: job_locations
+            constraintName: fk_job_locations_on_job
+            referencedColumnNames: id
+            referencedTableName: job
+

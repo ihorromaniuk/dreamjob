@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1755400289630-1
+      author: Igor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_organization
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: logo_url
+                  type: VARCHAR(255)
+            tableName: organization
+  - changeSet:
+      id: 1755400289630-2
+      author: Igor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: organization_id
+                  type: BIGINT
+              - column:
+                  name: industry_tags
+                  type: VARCHAR(255)
+            tableName: organization_industry_tags
+  - changeSet:
+      id: 1755400289630-3
+      author: Igor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: organization_id
+            baseTableName: organization_industry_tags
+            constraintName: fk_organization_industrytags_on_organization
+            referencedColumnNames: id
+            referencedTableName: organization
+
