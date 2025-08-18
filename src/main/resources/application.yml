@@ -14,5 +14,3 @@ spring:
     username: ${POSTGRES_USER:dreamjob_user}
     password: ${POSTGRES_PASSWORD:dreamjob_password}
     driver-class-name: org.postgresql.Driver
-  jackson:
-    property-naming-strategy: SNAKE_CASE

@@ -1,5 +1,6 @@
 package core.basesyntax.dreamjob.dto.job.external;
 
+import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,6 @@ public class GetroApiJobsRequestBody {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Filters {
-        private Set<String> jobFunctions;
+        private Set<String> jobFunctions = new HashSet<>();
     }
 }

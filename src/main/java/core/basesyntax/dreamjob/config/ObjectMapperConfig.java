@@ -13,6 +13,7 @@ public class ObjectMapperConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
         mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper;

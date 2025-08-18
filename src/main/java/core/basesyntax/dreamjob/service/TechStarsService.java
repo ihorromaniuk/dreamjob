@@ -1,9 +1,7 @@
 package core.basesyntax.dreamjob.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import core.basesyntax.dreamjob.dto.job.external.GetroApiJobsRequestBody;
 import core.basesyntax.dreamjob.dto.job.external.JobDetailsDto;
 import core.basesyntax.dreamjob.dto.job.external.JobExternalDto;
@@ -75,7 +73,6 @@ public class TechStarsService {
         }
         return responseDto;
     }
-
 
     private GetroApiJobsResponseDto fetchBatchOfJobsFromGetro(
             JobRequestDto requestDto
