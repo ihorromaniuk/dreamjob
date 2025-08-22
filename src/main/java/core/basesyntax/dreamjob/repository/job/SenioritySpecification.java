@@ -1,10 +1,6 @@
 package core.basesyntax.dreamjob.repository.job;
 
 import core.basesyntax.dreamjob.model.Job;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import java.util.Set;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -12,13 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SenioritySpecification {
     public Specification<Job> getSpecification(Set<String> seniorities) {
-        return new Specification<Job>() {
-            @Override
-            public Predicate toPredicate(Root<Job> root,
-                                         CriteriaQuery<?> query,
-                                         CriteriaBuilder criteriaBuilder) {
-                return root.get("seniority").in(seniorities);
-            }
-        };
+        return (root, query, criteriaBuilder) ->
+                root.get("seniority").in(seniorities);
     }
 }

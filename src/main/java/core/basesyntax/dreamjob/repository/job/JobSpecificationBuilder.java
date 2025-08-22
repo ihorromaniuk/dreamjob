@@ -18,17 +18,19 @@ public class JobSpecificationBuilder implements
     @Override
     public Specification<Job> build(JobRequestDto.Filters params) {
         Specification<Job> spec = Specification.unrestricted();
-        if (params.getJobFunctions() != null && !params.getJobFunctions().isEmpty()) {
-            spec = spec.and(laborFunctionSpecification
-                    .getSpecification(params.getJobFunctions()));
-        }
-        if (params.getLocations() != null && !params.getLocations().isEmpty()) {
-            spec = spec.and(locationSpecification
-                    .getSpecification(params.getLocations()));
-        }
-        if (params.getSeniorities() != null && !params.getSeniorities().isEmpty()) {
-            spec = spec.and(senioritySpecification
-                    .getSpecification(params.getSeniorities()));
+        if (params != null) {
+            if (params.getJobFunctions() != null && !params.getJobFunctions().isEmpty()) {
+                spec = spec.and(laborFunctionSpecification
+                        .getSpecification(params.getJobFunctions()));
+            }
+            if (params.getLocations() != null && !params.getLocations().isEmpty()) {
+                spec = spec.and(locationSpecification
+                        .getSpecification(params.getLocations()));
+            }
+            if (params.getSeniorities() != null && !params.getSeniorities().isEmpty()) {
+                spec = spec.and(senioritySpecification
+                        .getSpecification(params.getSeniorities()));
+            }
         }
         return spec;
     }
