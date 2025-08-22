@@ -8,9 +8,12 @@ import core.basesyntax.dreamjob.exception.EntityNotFoundException;
 import core.basesyntax.dreamjob.mapper.JobMapper;
 import core.basesyntax.dreamjob.model.Job;
 import core.basesyntax.dreamjob.repository.JobRepository;
+import core.basesyntax.dreamjob.repository.job.JobSpecificationBuilder;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class JobService {
     private final JobRepository jobRepository;
     private final JobMapper jobMapper;
+    private final JobSpecificationBuilder jobSpecificationBuilder;
 
     public Job save(Job job) {
         return jobRepository.save(job);
@@ -34,16 +38,16 @@ public class JobService {
         return jobMapper.toDto(getJobById(id));
     }
 
-    public BatchOfJobsResponseDto getJobs(JobRequestDto requestBody) {
+    public BatchOfJobsResponseDto getJobs(JobRequestDto requestDto) {
         Pageable pageable = Pageable
-                .ofSize(requestBody.getHitsPerPage())
-                .withPage(requestBody.getPage());
-        Page<JobsShortenedResponseDto> pageOfJobs = jobRepository
-                .findAllByLaborFunctionsContaining(requestBody.getFilters().getJobFunctions(),
-                        pageable)
-                .map(jobMapper::toShortenedDto);
-
-        return new BatchOfJobsResponseDto((int) pageOfJobs.getTotalElements(),
-                pageOfJobs.toList());
+                .ofSize(requestDto.getHitsPerPage())
+                .withPage(requestDto.getPage());
+        Specification<Job> specification = jobSpecificationBuilder.build(requestDto.getFilters());
+        Page<Job> page = jobRepository.findAll(specification, pageable);
+        List<JobsShortenedResponseDto> jobs = page
+                .stream()
+                .map(jobMapper::toShortenedDto)
+                .toList();
+        return new BatchOfJobsResponseDto(page.getTotalElements(), jobs);
     }
 }

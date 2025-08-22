@@ -21,5 +21,7 @@ public class JobRequestDto {
     public static class Filters {
         @Schema(name = "job_functions")
         private Set<String> jobFunctions;
+        private Set<String> locations;
+        private Set<String> seniorities;
     }
 }

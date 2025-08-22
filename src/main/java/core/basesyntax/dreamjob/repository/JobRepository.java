@@ -2,13 +2,14 @@ package core.basesyntax.dreamjob.repository;
 
 import core.basesyntax.dreamjob.model.Job;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface JobRepository extends JpaRepository<Job, Long> {
+public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificationExecutor<Job> {
     @EntityGraph(attributePaths = {
             "organization",
             "organization.industryTags",
@@ -22,5 +23,5 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             "laborFunctions",
             "locations"
     })
-    Page<Job> findAllByLaborFunctionsContaining(Set<String> laborFunctions, Pageable pageable);
+    Page<Job> findAll(Specification specification, Pageable pageable);
 }
