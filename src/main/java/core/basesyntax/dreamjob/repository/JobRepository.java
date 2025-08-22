@@ -23,5 +23,5 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
             "laborFunctions",
             "locations"
     })
-    Page<Job> findAll(Specification specification, Pageable pageable);
+    Page<Job> findAll(Specification<Job> specification, Pageable pageable);
 }
