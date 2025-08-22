@@ -64,11 +64,10 @@ public class JobController {
         return ResponseEntity.ok().body(jobService.getJobResponseById(id));
     }
 
-    @Operation(summary = "Get all jobs from local database with pagination and job "
-            + "functions filter")
+    @Operation(summary = "Get all jobs from local database with pagination and filters")
     @ApiResponse(
             responseCode = "200",
-            description = "Found all jobs with pagination and filter",
+            description = "Found all jobs with pagination and filters",
             content = @Content(schema = @Schema(implementation = BatchOfJobsResponseDto.class))
     )
     @PostMapping("/local")
