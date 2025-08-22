@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class LaborFunctionSpecification {
     public Specification<Job> getSpecification(Set<String> laborFunctions) {
-        return (root, query, criteriaBuilder) ->
-                root.join("laborFunctions").in(laborFunctions);
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            return root.join("laborFunctions").in(laborFunctions);
+        };
     }
 }

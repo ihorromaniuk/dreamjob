@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class LocationSpecification {
     public Specification<Job> getSpecification(Set<String> locations) {
-        return (root, query, criteriaBuilder) ->
-                root.join("locations").in(locations);
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            return root.join("locations").in(locations);
+        };
     }
 }
