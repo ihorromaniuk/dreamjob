@@ -7,8 +7,8 @@ and organization information - all managed via a single controller.
 ## Technology stack
 - **Java 21**
 - **Database**: PostgreSQL, Hibernate 6.6.2
-- **Spring Boot 3.4.0**: Spring Core, Spring Web, Spring Data
-- **Web Development**: Tomcat 10.1.33, JSON
+- **Spring Boot 3.4.0**: Spring Core, Spring Web, Spring Data, Scheduler
+- **Web Development**: Tomcat 10.1.33, JSON, Multithreading
 - **HTTP & HTML Processing Libraries**: OkHttp, Jsoup
 - **Tools**: Maven 3.9.9, Liquibase 4.29.2, Docker 27.3.1, Swagger OpenAPI
 
