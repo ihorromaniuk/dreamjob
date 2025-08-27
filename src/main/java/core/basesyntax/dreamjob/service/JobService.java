@@ -9,6 +9,7 @@ import core.basesyntax.dreamjob.mapper.JobMapper;
 import core.basesyntax.dreamjob.model.Job;
 import core.basesyntax.dreamjob.repository.JobRepository;
 import core.basesyntax.dreamjob.repository.job.JobSpecificationBuilder;
+import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -49,5 +50,9 @@ public class JobService {
                 .map(jobMapper::toShortenedDto)
                 .toList();
         return new BatchOfJobsResponseDto(page.getTotalElements(), jobs);
+    }
+
+    public void deleteJobsByUpdatedAtBefore(Instant instant) {
+        jobRepository.deleteByUpdatedAtBefore(instant);
     }
 }

@@ -1,5 +1,7 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/changes/01-create-organization-entity.yaml.yaml
+      file: db/changelog/changes/01-create-organization-entity.yaml
   - include:
-      file: db/changelog/changes/02-create-job-entity.yaml.yaml
+      file: db/changelog/changes/02-create-job-entity.yaml
+  - include:
+      file: db/changelog/changes/03-add-job-update-at-index.yaml

@@ -1,17 +1,20 @@
 package core.basesyntax.dreamjob.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.ManyToOne;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -46,4 +49,7 @@ public class Job {
     private String description;
 
     private String seniority;
+
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 }

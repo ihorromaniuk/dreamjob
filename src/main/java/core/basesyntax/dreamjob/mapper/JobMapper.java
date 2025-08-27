@@ -21,6 +21,7 @@ public interface JobMapper {
     @Mapping(target = "positionName", source = "jobExternalDto.title")
     @Mapping(target = "organizationJobPageUrl", source = "jobExternalDto.url")
     @Mapping(target = "postedDate", source = "jobExternalDto.createdAt")
+    @Mapping(target = "updatedAt", ignore = true)
     Job toModel(JobExternalDto jobExternalDto, JobDetailsDto jobDetailsDto);
 
     @Mapping(target = "logoUrl", source = "organization.logoUrl")

@@ -1,6 +1,7 @@
 package core.basesyntax.dreamjob.repository;
 
 import core.basesyntax.dreamjob.model.Job;
+import java.time.Instant;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,4 +25,6 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
             "locations"
     })
     Page<Job> findAll(Specification<Job> specification, Pageable pageable);
+
+    void deleteByUpdatedAtBefore(Instant createdAtBefore);
 }

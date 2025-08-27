@@ -6,17 +6,19 @@ import core.basesyntax.dreamjob.dto.job.external.GetroApiJobsRequestBody;
 import core.basesyntax.dreamjob.dto.job.external.JobDetailsDto;
 import core.basesyntax.dreamjob.dto.job.external.JobExternalDto;
 import core.basesyntax.dreamjob.dto.job.external.GetroApiJobsResponseDto;
-import core.basesyntax.dreamjob.dto.job.internal.BatchOfJobsResponseDto;
-import core.basesyntax.dreamjob.dto.job.internal.JobRequestDto;
 import core.basesyntax.dreamjob.mapper.JobMapper;
 import core.basesyntax.dreamjob.mapper.OrganizationMapper;
 import core.basesyntax.dreamjob.model.Job;
-import core.basesyntax.dreamjob.model.Organization;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,12 +29,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class TechStarsService {
+    private static final Duration TIME_IN_DAYS_FOR_JOB_TO_STAY_WITHOUT_UPDATING =
+            Duration.ofDays(2L);
     private static final int DEFAULT_HITS_PER_PAGE = 20;
+    private static final int AMOUNT_OF_THREADS_TO_SAVE_JOBS = 20;
     private static final String DATA_TESTID_ATTRIBUTE = "data-testid";
     private static final String CAREER_PAGE_ATTRIBUTE_VALUE = "careerPage";
     private static final String CONTENT_ATTRIBUTE_VALUE = "content";
@@ -46,45 +52,67 @@ public class TechStarsService {
             "https://api.getro.com/api/v2/collections/89/search/jobs";
 
     private final ObjectMapper objectMapper;
+    private final Clock clock;
     private final OkHttpClient client;
     private final JobMapper jobMapper;
     private final JobService jobService;
     private final OrganizationService organizationService;
     private final OrganizationMapper organizationMapper;
 
-    public BatchOfJobsResponseDto fetchAndSaveBatchOfJobs(JobRequestDto requestBody) {
-        if (requestBody.getHitsPerPage() == 0) {
-            requestBody.setHitsPerPage(DEFAULT_HITS_PER_PAGE);
+    @Scheduled(cron = "0 0 3 * * *")
+    public void refreshJobsDaily() throws InterruptedException {
+        getAllJobsAndSaveToDb();
+        jobService.deleteJobsByUpdatedAtBefore(Instant.now(clock)
+                .minus(TIME_IN_DAYS_FOR_JOB_TO_STAY_WITHOUT_UPDATING));
+    }
+
+    public void getAllJobsAndSaveToDb() throws InterruptedException {
+        ExecutorService pool = Executors.newFixedThreadPool(AMOUNT_OF_THREADS_TO_SAVE_JOBS);
+        try {
+            int page = 0;
+            while (true) {
+                GetroApiJobsResponseDto batch = fetchBatchOfJobsFromGetro(
+                        new GetroApiJobsRequestBody(DEFAULT_HITS_PER_PAGE,
+                                page,
+                                new GetroApiJobsRequestBody.Filters())
+                );
+                List<JobExternalDto> jobs = batch.getResults().getJobs();
+                if (jobs == null || jobs.isEmpty()) {
+                    break;
+                }
+
+                for (JobExternalDto jobExternalDto : jobs) {
+                    if (!jobExternalDto.isHasDescription()) {
+                        continue;
+                    }
+                    pool.submit(() -> {
+                        organizationService.save(organizationMapper.toModel(jobExternalDto));
+                        JobDetailsDto jobDetails = getJobDetails(jobExternalDto);
+                        Job job = jobMapper.toModel(jobExternalDto, jobDetails);
+                        job.setUpdatedAt(Instant.now(clock));
+                        jobService.save(job);
+                    });
+                }
+                page++;
+            }
+        } finally {
+            pool.shutdown();
+            pool.awaitTermination(10, TimeUnit.MINUTES);
+            System.out.println("Done");
         }
-        GetroApiJobsResponseDto getroApiJobsResponseDto = fetchBatchOfJobsFromGetro(requestBody);
-        List<JobExternalDto> filteredJobList = getroApiJobsResponseDto.getResults().getJobs()
-                .stream()
-                .filter(JobExternalDto::isHasDescription)
-                .toList();
-        BatchOfJobsResponseDto responseDto = new BatchOfJobsResponseDto(
-                getroApiJobsResponseDto.getResults().getCount(), new ArrayList<>());
-        for (JobExternalDto jobExternalDto : filteredJobList) {
-            Organization savedOrganization = organizationService
-                    .save(organizationMapper.toModel(jobExternalDto));
-            JobDetailsDto jobDetails = getJobDetails(jobExternalDto);
-            Job savedJob = jobService.save(jobMapper.toModel(jobExternalDto, jobDetails));
-            savedJob.setOrganization(savedOrganization);
-            responseDto.jobDtos().add(jobMapper.toShortenedDto(savedJob));
-        }
-        return responseDto;
     }
 
     private GetroApiJobsResponseDto fetchBatchOfJobsFromGetro(
-            JobRequestDto requestDto
+            GetroApiJobsRequestBody getroApiJobsRequestBody
     ) {
-        GetroApiJobsRequestBody getroRequestBody = jobMapper.toGetroRequestDto(requestDto);
+
         RequestBody requestBody;
         try {
             requestBody = RequestBody
-                    .create(objectMapper.writeValueAsBytes(getroRequestBody));
+                    .create(objectMapper.writeValueAsBytes(getroApiJobsRequestBody));
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Can't convert request body object to bytes. "
-                    + "Request body object: " + getroRequestBody, e);
+                    + "Request body object: " + getroApiJobsRequestBody, e);
         }
         Request request = new Request.Builder()
                 .url(GETRO_API_JOBS_URL)
