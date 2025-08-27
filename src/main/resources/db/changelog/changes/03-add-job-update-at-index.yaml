@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1755400119824-idx-updated-at
+      author: Igor
+      changes:
+        - createIndex:
+            tableName: job
+            indexName: idx_job_updated_at
+            columns:
+              - column:
+                  name: updated_at

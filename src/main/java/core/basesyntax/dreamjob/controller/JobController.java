@@ -27,25 +27,6 @@ public class JobController {
     private final TechStarsService techStarsService;
     private final JobService jobService;
 
-    @Operation(summary = "Get jobs from https://jobs.techstars.com filtered by job functions "
-            + "with pagination and save to local database",
-            description = "Jobs with no description will be omitted and therefore won't show in "
-                    + "response list, so amount of jobs returned can be less than "
-                    + "value of property \"hits_per_page\". Also this method returns total"
-                    + "amount of filtered by functions jobs on https://jobs.techstars.com/")
-    @ApiResponse(
-            responseCode = "200",
-            description = "Fetched jobs and saved to database",
-            content = @Content(schema = @Schema(implementation = BatchOfJobsResponseDto.class))
-    )
-    @PostMapping
-    public ResponseEntity<BatchOfJobsResponseDto> getJobsFromTechstars(
-            @RequestBody JobRequestDto requestBody
-    ) {
-        return ResponseEntity.ok()
-                .body(techStarsService.fetchAndSaveBatchOfJobs(requestBody));
-    }
-
     @Operation(summary = "Get job by id from local database")
     @ApiResponses({
             @ApiResponse(
